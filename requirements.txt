@@ -1,0 +1,9 @@
+django
+djangorestframework
+celery
+redis
+redis-cli
+coverage
+django_celery_beat
+psycopg2
+coverage

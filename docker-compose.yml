@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  django:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    
+    depends_on:
+      - postgres
+      - celery
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: django
+      POSTGRES_USER: django
+      POSTGRES_PASSWORD: 123password456
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+  celery:
+    build: .
+    command: bash -c "celery -A main worker --loglevel=INFO & celery -A main beat"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
